@@ -1,0 +1,186 @@
+vim常用：
+:set nu显示行数  :set mouse=a 鼠标滑动屏幕,:set ic :set noic 忽略不忽略大小写 /word_to_search\c \c表示忽略大小写 c小写忽略，C大写不忽略
+比较两个文件不同：
+vim -d file1 file2； 然后使用“[c”跳转到前一个不同点，使用“]c”跳转到后一个不同点，可以使用Ctrl+w之后，左右上下进行替换。
+如果已经打开了文件file1的情况下，可以在file1中输入:vert diffsplit file2，如果没有用vert命令，diffsplit则会分上下两个窗口。
+跳转到上次修改的位置：g; 
+G文件结尾，gg文件开头
+跳转到局部变量的定义处：gD
+打标签，调到指定的标签出：ma 然后`a跳转到打好的标签a处，a可以是a-z。
+:file newname 给文件另存为newname
+
+:Ex 开启目录浏览器，可以浏览当前目录下的所有文件，并可以选择
+:Sex 水平分割当前窗口，并在一个窗口中开启目录浏览器
+
+选中复制  normal模式下先v进入visual 模式  然后按方向键  选中  
+
+vim和命令执行交互：
+打开VIM下直接执行命令：在vim界面输入”:！ls“
+把当前命令的执行结果读入VIM中":read ！ls""
+把当前VIM文件中的内容转换为命令输出到命令行:"：write ！sh" 后者":write !cmd"
+:history 可以显示刚才在命令窗口输入的历史命令
+
+查找/word，通常的查找，或者/\<word\> 字母全匹配查找，可能不分大小写，除非设定了。 然后n向下，N向上 或者esc 按#号查看光标所在的单词
+:up 或者 :update 与 :w 类似，但仅在文件有改动才会保存 :q!取消保存
+Ctrl+n，Ctrl+p补全查找 
+
+复制黏贴 Nyy，或者Ndd，然后按p，光标之前用大写（光标后面的N行复制或者剪切）
+多行的时候，在某个位置输入ma（打标签），在两位一个位置输入y'a，或者d'a，然后在任意位置输入p即可
+I：在当前行首插入，A：在当前行尾插入，o当前行下面插入一行，O：在当前行上面插入一个新行
+y"+ 从一个文件复制到两外一个文件复制后加上"+,黏贴前加上"+即可， "+p 
+
+VIM下C-v： 
+= 自动格式化代码  yy拷贝，dd剪切，yw拷贝光标后单词，或者选定后拷贝；zf，zo折叠打开，  
+I+注释符号+按两次Esc，注释代码，取消先Ctrl+v，选中，按d； a光标的下一个输入， %定位到{对应的位置}
+
+移动光标，按zz，会获得光标置中，结合hjkl左右上下,大写ZZ保存并退出
+Ctrl+f/+b 前后一屏幕翻动浏览
+Ctrl+d/+u 前后半屏幕翻动浏览， H，M,L光标移动 —光标移到行首，n$光标移到n行尾,_光标移到行首，
+Ctrl+g 显示当前的文件名
+
+在Esc下r替换，x删除；dnw：删除n个单词,需将光标移到单词的第一个字母上，按dnw，如果光标在单词任意位置，用daw，d$;
+dnl:向右删除n个字母；dnh:向左删除n个字母；dnj:向下删除n行；dnk:向上删除n行
+替换:.,$s/orichar/newchar/g 字符全部替换       :,+5s/orichar/newchar 替换光标处以下五行的字符
+
+在Esc下，按u撤销上一次编辑，按Ctrl+r 回退前一个命令；>整行右移，<整行左移；
+Esc,shift+*,向下整词查找。shift+#向后整词查找
+
+:noh不高亮  
+：tabnew filename，gt 互相之间切换；:tabs 显示已打开标签页，:tabn :tabp上一个下一个标签；:tabc关闭
+
+tmux：Ctrl+B启动
+[ 划动鼠标浏览
+Alt+方向键	调整面板大小
+Alt+F12全屏显示
+C  新建一个窗口；n 切换到某个窗口，x关闭当前窗口，“,”重命名当前窗口，]进入赋值模式。
+"上下分割，%左右分割，方向键切换到某个分割
+：进入命令模式
+Ctrl+b 然后d，进入detach状态，下次进入可以tmux attach 进入上次tmux的编辑界面
+
+GDB调试:
+makefile 中添加-g；gdb exefile;
+set args XX XXX; run; start; c n s; finish调试时退出函数调用； 
+set var sum=0 可以中途改变变量的值继续运行
+b filename:line or funcName; disable/enable breakpoint 1; clean number;delete breakpoints;
+backtrace or bt， f fnum查看某贞，函数调用情况，可结合info一起查看局部变量的值;
+print var/ 'f1.cpp'::var/ function::var; list lineNum or funcName; info break/watchpoints/locals(查看函数局部变量的值);
+display/undisplay varName; watch name/expr; show：用来获取GDB本身设置相关的一些信息
+
+Ctags：
+ctags -R 或者ctags -R * 或者ctags *.c等
+vim -t 要查找的结构体名或数据类型名或函数名或系统定义的宏名；可以直接跳转到定义处，前提是打了tag，并且在tag文件的目录下
+vim  filename 在有ctag文件目录下打开file(如果不在tags目录下，则可以使用:set tags=tags_path；指定tags目录，
+如果有多个tags目录，可以使用"，"隔开)，同样可以使用ctags特性
+vim -t main 使用生产tags之后，直接使用打开main函数所在文件，光标指到对应的函数名那一行；
+Ctrl+] ；跳转到光标tag的定义处 Ctrl+t/Ctrl+o 可以跳回
+:tags；查看跳了哪些tag，然后可以使用 :3tag 向前跳指定的3个步长  或者Ctrl+t也可以加前缀，指定返回跳转步长 
+:stag tagname ；分割窗口，并调到tagname处，一般使用tags先查看，然后使用分割split，使用Ctrl+w实现跳转
+:[count]tprevious  跳到前count个 如果打开多个重定义的时候，会用。 :[count]tnext 跳到后count个，:tselect tagname 选择某个
+
+Taglist：
+：Tlist显示或关闭，Ctrl+w来回切换，光标在某个位置处，输入enter，定位到当前的字符处
+
+OmniCppComplete：
+类，结构，指针，属性方法提示和补齐
+
+
+tree:
+tree -L N 查看N级别的目录结构，可以>struc.txt输出到文件方便查看 
+Eclipse:
+Ctl+shift+f 格式化代码 Ctl+/ 注释代码
+
+valgrind:
+valgrind --track-fds=yes --leak-check=full --undef-value-errors=yes ./a.out
+
+NotePad：
+Alt+0 折叠全部 +shift打开
+git
+git add .
+git commit -m "aaaa"
+git push 
+git diff HEAD 显示与仓库之间的差异
+git branch newBranchName 创建一个新的分支
+git checkout newBranchName 切换到新的分支
+git log 使用查看历史版本，然后结合以下操作，可以会退到指定的版本
+$ git reset --hard HEAD^ 回退到上一个版本，HEAD是当前版本，如果到上上一个版本，用两个^^,或者直接写2
+或者git reset --hard commitID，表示回退到commitID，即当前的Head为commitID
+
+git branch -a 查看远程分支
+git push origin --delete branchName 删除远程分支
+git branch -m old new 重命名本地分支
+重命名远程分支：先删除远程分支，然后重命名本地分支，再重新提交一个远程分支
+冲突：git checkout mastername； git pull；然后切换到本地分支，git merge mastername，有冲突会提示，然后进入修改
+如果修改了，没有git add 直接退回到修改的前的原始状态，可以使用"git checkout <file>"
+保持和远程分支一致，一般可以git pull origin remoteName
+git add .出错之后，可以使用git rm --cached <file> 删除添加到cash区的提交
+$ git submodule add https://github.com/subexample 子项目添加
+$ git clone --recursive https://github.com/oriexample  有子项目情况下克隆父项目
+如果git出错了，一直处于gitchecking状态的话，使用git remote prune origin 来去除一些本地端有分支，而远端没有分支等错误到时的merge错误
+
+其他
+Alt+F4关闭当前窗口 Win+D退出到桌面,所有最小化，Alt+空格+n最小化当前窗口
+
+Linux：
+环境变量设置：
+加入：export PATH=$PATH:/opt/au1200_rm/build_tools/bin；查看是否成功：输入export； 或者echo $PATH 查看当前环境变量情况
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../your_project/lib
+修改profile：vim /etc/profile（系统级别）或者.bashrc（仅会对当前用户有效）, 然后加入export PATH="$PATH:/opt/au1200_rm/build_tools/bin"
+source ./etc/profile 生效
+导入库路径：export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/media/sdb/libs
+
+cat filename查看文件内容; grep "关键字" -r 搜索目录 查看关键字位置; 
+find / -name keyword 或者locate /etc/sh 一般查文件位置目录etc下的sh开头的文件  加-type d 表示查找对应的文件夹
+^匹配行首，*匹配任意字符，$匹配行尾；例如^a**b$ 查找a开头b结尾的字符。 find . -name "Alignment_*" 在当前目录下，查找文件夹
+df -hl 查看磁盘空间剩余信息； du -sh [目录] 查看当前目录占空间大小；
+du [--max-depth=1] -h [路径或者文件] 详细显示文件目录里面的文件空间大小；
+r=4,w=2,x=1，所以rw-r--r--用数字表示为644
+chmod -R 777 ./file 修改文件权限  644
+mkdir -p ./src/test 在当前目录下创建src/test文件加
+
+objdump -t nets.o |grep -i gettensor
+
+压缩解压：
+# tar -cf all.tar *.jpg 这条命令是将所有.jpg的文件打成一个名为all.tar的包。-c是表示产生新的包，-f指定包的文件名。
+# tar -rf all.tar *.gif 这条命令是将所有.gif的文件增加到all.tar的包里面去。-r是表示增加文件的意思。 
+# tar -uf all.tar logo.gif 这条命令是更新原来tar包all.tar中logo.gif文件，-u是表示更新文件的意思。 
+# tar -tf all.tar 这条命令是列出all.tar包中所有文件，-t是列出文件的意思 
+# tar -xf all.tar 这条命令是解出all.tar包中所有文件，-x是解开的意思 
+#zip -r myfile.zip ./*  将当前目录下的所有文件和文件夹全部压缩成myfile.zip文件,－r表示递归压缩子目录下所有文件
+unzip -o -d /home/sunny myfile.zip 把myfile.zip文件解压到 /home/sunny/ 
+-o:不提示的情况下覆盖文件；
+-d:-d /home/sunny 指明将文件解压缩到/home/sunny目录下
+#zip -d myfile.zip smart.txt  删除压缩文件中smart.txt文件
+#zip -m myfile.zip ./rpm_info.txt 向压缩文件中myfile.zip中添加rpm_info.txt文件
+
+在屏幕打印，并且输出到文件 ./run |tee log.txt 可以加参数-a，附加到文件，而不是覆盖。
+>>, >&, 
+>!  将命令的执行结果送至指定的文件中，若文件已经存在，则覆盖
+make 2>&1 | tee log.txt  其中0 stdin，1 stdout，2 stderr &1是指无论标准输出在哪里
+make VERBOSE=1 显示编译细节
+
+Mac ios
+http://www.cnblogs.com/tekkaman/archive/2013/03/01/2939198.html lipo相关
+lipo –create Release-iphoneos/libiphone.a Debig-iphonesimulator/libiphone.a –output libiphone.a
+看到这样的命令行，你会怎样理解呢。
+很简单，我将模拟器和设备的静态库文件合并成一个文件输出了，以后在发布可以库的时候不用发一个模拟器版的和一个真机版的了，这样子的一个库可以在编译的时候自动识别需要连接的库。
+
+nvidia-smi -l 5 显示运行的cuda信息
+export CUDA_VISIBLE_DEVICES=0
+echo $LD_LIBRARY_PATH
+
+Protobuf：根据proto生成对应的cc和h文件
+protoc caffe.proto --cpp_out=.
+
+查看CPU信息
+vim /proc/cpuinfo
+
+
+valgrind   
+编译  g++ -g -O0 xx.cpp -o sample
+valgrind ./sample(执行文件)
+
+ tar -zxvf aliedit.tar.gz
+ pwd查看当前路径
+
+安装cmake make  
+直接命令安装
